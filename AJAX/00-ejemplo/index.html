@@ -9,9 +9,13 @@
 
       function loadDoc() {
 
+        // 1. Se crea el objeto
         var xhttp = new XMLHttpRequest();
 
-        xhttp.onreadystatechange = function() {
+        // 2. Registrar evento
+        xhttp.onreadystatechange = mostrarContenido;
+
+        function mostrarContenido() {
           if (this.readyState == 4 && this.status == 200) {
             document.getElementById("demo").innerHTML = this.responseText;
           }

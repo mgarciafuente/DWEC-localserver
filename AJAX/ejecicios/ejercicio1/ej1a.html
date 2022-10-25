@@ -1,0 +1,56 @@
+<!-- Crear una página en el que aparecerá un cuadro de texto y un botón. Al
+    pulsar el botón pediremos al servidor web el contenido del fichero que le
+    indiquemos en el cuadro de texto. Este texto deberá aparecer debajo de los
+    elementos en un cuadro. En el caso de que el fichero no exista en el
+    servidor tendrá que avisarnos de ello.-->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>DWEC | AJAX ej.1</title>
+        <link rel="shortcut icon" href="../img/favicon.ico.png" type="image/x-icon">
+        <link rel="stylesheet" href="../css/main.css">
+        <script type="text/javascript">
+
+            window.onload = init;
+            var http;
+
+            function init() {
+                document.myForm.addEventListener("submit", pedirFichero);
+            }
+
+            function pedirFichero() {
+                event.preventDefault();
+                http = new XMLHttpRequest();
+                //var nombreFichero = document.myForm.textarea.value
+                var url = "ej1a.php";            
+                http.onreadystatechange = recogerFichero;
+                http.open("GET", url, true);
+                http.send(null);
+            }
+
+            function recogerFichero() {
+                if(http.readyState == 4 && http.status == 200) {
+                    document.myForm.textarea.innerHTML = this.responseText;
+                }
+            }
+
+
+        </script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="cont">
+                <form action="ej1a.html" name="myForm" method="post" autocomplete="off">
+                    <!-- <input type="text" name="nombre" placeholder="Nombre del fichero"> -->
+                    <input type="submit" name="submit" value="Pedir">
+                    <textarea name="textarea" placeholder="Contenido"></textarea>
+                </form>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; Mikel García Fuente</p>
+            <p>CFGS DAW Zubiri Manteo | DWEC 2022-2023</p>
+        </footer> 
+    </body>
+</html>

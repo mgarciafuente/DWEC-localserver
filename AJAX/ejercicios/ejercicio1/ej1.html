@@ -3,6 +3,7 @@
     indiquemos en el cuadro de texto. Este texto deberá aparecer debajo de los
     elementos en un cuadro. En el caso de que el fichero no exista en el
     servidor tendrá que avisarnos de ello.-->
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -21,15 +22,23 @@
 
             function pedirFichero() {
                 event.preventDefault();
+                // 1. Crear objeto
                 http = new XMLHttpRequest();
-                var fichero = "ejemplo.txt";            
-                http.onreadystatechange = recogerFichero;
+
+                // 2. Configurar peticion
+                var fichero = "ejemplo.txt";
                 http.open("GET", fichero, true);
+
+                // 3. Registrar evento 'readystatechange' (cuando esté listo, haz lo que sea)
+                http.onreadystatechange = recogerFichero;
+
+                // 4. Enviar (ponemos null en caso de GET, para POST será diferente)
                 http.send(null);
             }
 
             function recogerFichero() {
                 if(http.readyState == 4 && http.status == 200) {
+                    // Aquí escribiremos lo que queremos que se ejecute tras recibir la respuesta
                     document.myForm.textarea.innerHTML = this.responseText;
                 }
             }

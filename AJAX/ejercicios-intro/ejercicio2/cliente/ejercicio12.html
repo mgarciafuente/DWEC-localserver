@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<html lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ejercicio 12 - Actualizacion periodica de contenidos</title>
@@ -21,6 +21,60 @@ body { margin: 0; }
 }
 </style>
 <script type="text/javascript">
+
+  window.onload = init;
+  var ticker;
+  var detener;
+  var anterior;
+  var siguiente;
+  var contenidos;
+  var intervalo;
+  var xhttp;
+
+  function init() {
+    ticker = document.getElementById("ticker");
+    detener = document.getElementById("detener");
+    anterior = document.getElementById("anterior");
+    siguiente = document.getElementById("siguiente");
+    contenidos = document.getElementById("contenidos");
+
+    ticker.innerText = getDate();
+    iniciarIntervalo();
+    anterior.addEventListener("click", anteriorIntervalo);
+    siguiente.addEventListener("click", siguienteIntervalo);
+  }
+
+  function getDate() {
+    var date = new Date();
+    var hora = date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes() + ":" + (date.getSeconds()<10?'0':'') + date.getSeconds();
+    return hora;
+  }
+
+  function peticion() {
+    xhttp = new XMLHttpRequest();
+    xhttp.addEventListener("readystatechange", procesaNoticia);
+    xhttp.open("GET", "../servidor/generaContenidos.php");
+    xhttp.send();
+  }
+
+  function procesaNoticia() {
+    if(xhttp.readyState == 4 && xhttp.status == 200) {
+      ticker.innerText = getDate() + " | " + this.responseText;
+    }
+  }
+
+  function iniciarIntervalo() {
+    intervalo = setInterval(peticion, 1000);
+    this.value = "Detener";
+    this.addEventListener("click", detenerIntervalo);
+  }
+
+  function detenerIntervalo() {
+    clearInterval(intervalo);
+    this.value = "Iniciar";
+    this.addEventListener("click", iniciarIntervalo);
+  }
+
 </script>
 </head>
 <body>

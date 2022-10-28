@@ -48,14 +48,17 @@
 
       function recogerFichero() {
         var time = (new Date() - initTime);
+        var contenidos = document.getElementById("contenidos");
         var estados = document.getElementById("estados");
-        estados.innerText += "readyState: " + peticion.readyState + " (" + time + "ms)\n";
-
+        var cabeceras = document.getElementById("cabeceras");
         var codigo = document.getElementById("codigo");
+
+        estados.innerText += "readyState: " + peticion.readyState + " (" + time + "ms)\n";
         codigo.innerText += "status: " + peticion.status + "\n";
         
         if(peticion.readyState == 4 && peticion.status == 200) {
-          document.getElementById("contenidos").innerText = this.responseText;
+          contenidos.innerText = this.responseText;
+          cabeceras.innerText = this.getAllResponseHeaders();
         }
       }
 

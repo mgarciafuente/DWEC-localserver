@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ejercicio 12 - Actualizacion periodica de contenidos</title>
 <style type="text/css">
-body { margin: 0; }
-#contenidos { padding: 1em; }
-#ticker {
-  height: 20px;
-  padding: .3em;
-  border-bottom: 1px solid #CCC;
-  background: #FAFAFA;
-  font-family: Arial, Helvetica, sans-serif;
-}
-#ticker strong { margin-right: 1em; }
-#acciones {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-}
+  body { margin: 0; }
+  #contenidos { padding: 1em; }
+  #ticker {
+    height: 20px;
+    padding: .3em;
+    border-bottom: 1px solid #CCC;
+    background: #FAFAFA;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  #ticker strong { margin-right: 1em; }
+  #acciones {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
 </style>
 <script type="text/javascript">
 
@@ -65,13 +65,13 @@ body { margin: 0; }
 
   function iniciarIntervalo() {
     intervalo = setInterval(peticion, 1000);
-    this.value = "Detener";
+    detener.value = "Detener";
     this.addEventListener("click", detenerIntervalo);
   }
 
   function detenerIntervalo() {
     clearInterval(intervalo);
-    this.value = "Iniciar";
+    detener.value = "Iniciar";
     this.addEventListener("click", iniciarIntervalo);
   }
 

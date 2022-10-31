@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Ejercicio 13 - Comprobar disponibilidad del login</title>
+<title>Ejercicio 14 - Comprobar disponibilidad del login</title>
 
 <script type="text/javascript">
 
@@ -21,8 +21,9 @@
 		event.preventDefault();
 		peticion = new XMLHttpRequest();
 		peticion.addEventListener("readystatechange", getRespuesta);
-		peticion.open("POST", "../servidor/compruebaDisponibilidadXML.php");
-		peticion.send();
+		peticion.open("POST", "../servidor/compruebaDisponibilidadXML.php", true); //true -> asincrono
+		peticion.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // añadir si es post
+		peticion.send("login=" + document.forms[0].login.value);
 	}
 
 	function getRespuesta() {
@@ -32,7 +33,7 @@
 	}
 
 	function getRespuestaLarga(response) {
-		var respuesta = response.getElementsByTagName("disponible")[0].childNodes[0].nodeValue;
+		var respuesta = response.getElementsByTagName("disponible")[0].firstChild.nodeValue;
 		if(respuesta=="si") {
 			var respuestaString = "<p style='color:green;'>Usuario disponible!</p>";
 		} else {

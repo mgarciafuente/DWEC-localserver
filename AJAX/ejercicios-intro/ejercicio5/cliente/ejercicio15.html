@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Ejercicio 14 - Comprobar disponibilidad del login</title>
+<title>Ejercicio 15 - Comprobar disponibilidad del login</title>
 
 <script type="text/javascript">
 
@@ -21,14 +21,16 @@
 		event.preventDefault();
 		peticion = new XMLHttpRequest();
 		peticion.addEventListener("readystatechange", getRespuesta);
-		peticion.open("POST", "../servidor/compruebaDisponibilidadXML.php", true); //true -> asincrono
+		peticion.open("POST", "../servidor/compruebaDisponibilidadJSON.php", true); //true -> asincrono
 		peticion.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // añadir si es post
 		peticion.send("login=" + document.forms[0].login.value);
 	}
 
 	function getRespuesta() {
 		if(peticion.readyState == 4 && peticion.status == 200) {
-			disponibilidad.innerHTML = getRespuestaLarga(this.responseXML);
+			var respuesta = this.responseText;
+			disponibilidad.innerHTML = getRespuestaLarga(respuesta);
+
 			var sugerencias = document.getElementsByTagName("li");
 			for (var i=0; i<sugerencias.length; i++) {
 				sugerencias[i].addEventListener("click", utilizarNombre)
@@ -36,18 +38,17 @@
 		}
 	}
 
-	function getRespuestaLarga(response) {
-		var respuesta = response.getElementsByTagName("disponible")[0].firstChild.nodeValue;
-		if(respuesta=="si") {
+	function getRespuestaLarga(respuesta) {
+		var response = eval("("+respuesta+")");
+		if(response.disponible=="si") {
 			var respuestaString = "<p style='color:green;'>Usuario disponible!</p>";
 		} else {
 			var respuestaString = "<p style='color:red;'>Usuario no disponible!</p>";
 			respuestaString = respuestaString + "<p>Nombres alternativos:</p>";
 			var lista = "<ul>";
-			var login = response.getElementsByTagName("login");
-
-			for(var i=0; i<login.length; i++) {
-				lista = lista + "<li>" + login[i].firstChild.nodeValue + "</li>";
+			for(var i=0; i<response.alternativas.length; i++) {
+				lista = lista + "<li>" + response.alternativas[i] + "</li>";
+				console.log(response.alternativas[i]);
 			}
 			
 			lista = lista + "</ul>";

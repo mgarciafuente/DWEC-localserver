@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 16</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var peticionA;
+        var peticionB;
+        var provincias;
+
+        function init() {
+            cargarProvincias();
+        }
+
+        function cargarProvincias() {
+            peticionA = new XMLHttpRequest();
+            peticionA.addEventListener("readystatechange", comprobarPeticionA);
+            peticionA.open("GET", "/servidor/cargaProvinciasXML.php");
+            peticionA.send()
+        }
+
+        function comprobarPeticionA() {
+            if(this.readystate == 4 && this.status == 200) {
+                provincias = this.responseXML;
+                insertarProvincias(provincias);
+            }
+        }
+
+        function insertarProvincias(provincias) {
+            var provinciasSelect = document.miform.provincia;
+        }
+
+    </script>
+</head>
+<body>
+    <form name="miform">
+        <select name="provincia"></select>
+    </form>
+</body>
+</html>

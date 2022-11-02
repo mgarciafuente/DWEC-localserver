@@ -17,14 +17,11 @@ if($disponible == "no") {
 }
 
 if($disponible == "si") {
-	echo "{ \n".
-		"\t disponible: \"si\" \n".
-		"}";
+	echo "{\"disponible\": \"si\"}";
 }
 else {
-	echo "{ \n".
-		"\t disponible: \"no\", \n".
-		"\t alternativas: [ \"".
+	echo "{ \" disponible\": \"no\", \n".
+		"\t \"alternativas\": [ \"".
 		join("\", \"", $alternativasAutomaticas)."\" ] \n".
 		"}";
 }

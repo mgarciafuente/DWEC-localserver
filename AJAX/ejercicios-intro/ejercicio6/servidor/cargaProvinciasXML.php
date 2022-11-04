@@ -1,7 +1,7 @@
 ﻿<?php
 header("Content-Type: application/xml");
 
-$provincias["01"] = "Álava/Araba";
+$provincias["01"] = "Araba";
 $provincias["02"] = "Albacete";
 $provincias["03"] = "Alicante/Alacant";
 $provincias["04"] = "Almería";
@@ -23,7 +23,7 @@ $provincias["16"] = "Cuenca";
 $provincias["17"] = "Girona";
 $provincias["18"] = "Granada";
 $provincias["19"] = "Guadalajara";
-$provincias["20"] = "Guipúzcoa/Gipuzkoa";
+$provincias["20"] = "Gipuzkoa";
 $provincias["21"] = "Huelva";
 $provincias["22"] = "Huesca";
 $provincias["23"] = "Jaén";

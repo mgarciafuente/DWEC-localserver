@@ -10,35 +10,79 @@
         window.onload = init;
         var peticionA;
         var peticionB;
-        var provincias;
+        var provinciasXML;
+        var provinciasSelect;
+        var municipiosXML;
+        var municipiosSelect;
 
         function init() {
             cargarProvincias();
+            provinciasSelect = document.miform.provincia;
+            provinciasSelect.addEventListener("change", cargarMunicipios)
+            municipiosSelect = document.miform.municipio;
         }
 
         function cargarProvincias() {
             peticionA = new XMLHttpRequest();
-            peticionA.addEventListener("readystatechange", comprobarPeticionA);
-            peticionA.open("GET", "/servidor/cargaProvinciasXML.php");
-            peticionA.send()
+            peticionA.addEventListener("readystatechange", comprobarPeticionProvincias);
+            peticionA.open("GET", "servidor/cargaProvinciasXML.php", true);
+            peticionA.send();
         }
 
-        function comprobarPeticionA() {
-            if(this.readystate == 4 && this.status == 200) {
-                provincias = this.responseXML;
-                insertarProvincias(provincias);
+        function comprobarPeticionProvincias() {
+            if(this.readyState == 4 && this.status == 200) {
+                provinciasXML = this.responseXML;
+                insertarProvincias(provinciasXML);
             }
         }
 
-        function insertarProvincias(provincias) {
-            var provinciasSelect = document.miform.provincia;
+        function insertarProvincias(provinciasResponse) {         
+            var provinciasArray = provinciasResponse.getElementsByTagName("provincia");
+            for(var i=0; i<provinciasArray.length; i++) {
+                var option = document.createElement("option");
+                option.innerText = provinciasArray[i].getElementsByTagName("nombre")[0].firstChild.nodeValue;
+                option.value = provinciasArray[i].getElementsByTagName("codigo")[0].firstChild.nodeValue;
+                provinciasSelect.appendChild(option);
+            }
+        }
+
+
+        function cargarMunicipios() {
+            peticionB = new XMLHttpRequest();
+            peticionB.addEventListener("readystatechange", comprobarPeticionMunicipios);
+            peticionB.open("POST", "servidor/cargaMunicipiosXML.php", true);
+            peticionB.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // añadir si es post
+            peticionB.send("provincia=" + provinciasSelect.value);
+        }
+
+        function comprobarPeticionMunicipios() {
+            if(this.readyState == 4 && this.status == 200) {
+                municipiosXML = this.responseXML;
+                insertarMunicipios(municipiosXML);
+            }
+        }
+
+        function insertarMunicipios(municipiosResponse) {
+            var municipiosArray = municipiosResponse.getElementsByTagName("municipio");
+            municipiosSelect.innerHTML = "<option hidden selected>Municipios</option>"
+            for(var i=0; i<municipiosArray.length; i++) {
+                var option = document.createElement("option");
+                option.innerText = municipiosArray[i].getElementsByTagName("nombre")[0].firstChild.nodeValue;
+                option.value = municipiosArray[i].getElementsByTagName("codigo")[0].firstChild.nodeValue;
+                municipiosSelect.appendChild(option);
+            }
         }
 
     </script>
 </head>
 <body>
     <form name="miform">
-        <select name="provincia"></select>
+        <select name="provincia">
+            <option hidden selected>Provincias</option>
+        </select>
+        <select name="municipio">
+            <option hidden selected>Municipios</option>
+        </select>
     </form>
 </body>
 </html>

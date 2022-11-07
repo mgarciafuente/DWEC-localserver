@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 17</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var peticionA;
+        var peticionB;
+        var provinciasJSON;
+        var provinciasSelect;
+        var municipiosJSON;
+        var municipiosSelect;
+
+        function init() {
+            cargarProvincias();
+            provinciasSelect = document.miform.provincia;
+            provinciasSelect.addEventListener("change", cargarMunicipios)
+            municipiosSelect = document.miform.municipio;
+        }
+
+        function cargarProvincias() {
+            peticionA = new XMLHttpRequest();
+            peticionA.addEventListener("readystatechange", comprobarPeticionProvincias);
+            peticionA.open("GET", "servidor/cargaProvinciasJSON.php", true);
+            peticionA.send();
+        }
+
+        function comprobarPeticionProvincias() {
+            if(this.readyState == 4 && this.status == 200) {
+                provinciasJSON = JSON.parse(this.responseText);
+                insertarProvincias(provinciasJSON);
+            }
+        }
+
+        function insertarProvincias(provinciasResponse) {         
+            for(var key in provinciasResponse) {
+                var option = document.createElement("option");
+                option.innerText = provinciasResponse[key];
+                option.value = key;
+                provinciasSelect.appendChild(option);
+            };         
+        }
+
+
+        function cargarMunicipios() {
+            peticionB = new XMLHttpRequest();
+            peticionB.addEventListener("readystatechange", comprobarPeticionMunicipios);
+            peticionB.open("POST", "servidor/cargaMunicipiosJSON.php", true);
+            peticionB.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // añadir si es post
+            peticionB.send("provincia=" + provinciasSelect.value);
+        }
+
+        function comprobarPeticionMunicipios() {
+            if(this.readyState == 4 && this.status == 200) {
+                municipiosJSON = JSON.parse(this.responseText);
+                insertarMunicipios(municipiosJSON);
+            }
+        }
+
+        function insertarMunicipios(municipiosResponse) {
+            for(var key in municipiosResponse) {
+                var option = document.createElement("option");
+                option.innerText = municipiosResponse[key];
+                option.value = key;
+                municipiosSelect.appendChild(option);
+            }; 
+        }
+
+    </script>
+</head>
+<body>
+    <form name="miform">
+        <select name="provincia">
+            <option hidden selected>Provincias</option>
+        </select>
+        <select name="municipio">
+            <option hidden selected>Municipios</option>
+        </select>
+    </form>
+</body>
+</html>

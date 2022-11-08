@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css">
+    <title>Ejercicio 3</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var peticion;
+        var cont;
+        var sinopsis;
+
+        function init() {
+            cargarPeliculas();
+            cont = document.getElementsByClassName('cont')[0];
+            sinopsis = document.getElementsByClassName('sinopsis')[0];
+        }
+
+        function cargarPeliculas() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", comprobarPeticionPeliculas);
+            peticion.open("GET", "index.php", true);
+            peticion.send();
+        }
+
+        function comprobarPeticionPeliculas() {
+            if(this.readyState == 4 && this.status == 200) {
+                peliculasXML = this.responseXML;
+                insertarPeliculas(peliculasXML);
+            }
+        }
+
+        function insertarPeliculas(peliculasResponse) {
+
+            var peliculas = peliculasResponse.getElementsByTagName('Pelicula'); 
+
+            for(var i=0; i<peliculas.length; i++) {
+
+                var article = document.createElement("article");
+                
+                var imagen = peliculas[i].getElementsByTagName('imagen')[0].firstChild.nodeValue;
+                var titulo = peliculas[i].getElementsByTagName('Titulo')[0].firstChild.nodeValue;
+                var director = peliculas[i].getElementsByTagName('Director')[0].firstChild.nodeValue;
+                var sinopsis = peliculas[i].getElementsByTagName('sinopsis')[0].firstChild.nodeValue;
+                
+                var img = document.createElement("img");
+                img.src = "imagenes/" + imagen;
+                img.classList.add("pelimg"),
+                article.appendChild(img);
+
+                var h3 = document.createElement("h3");
+                h3.innerText = titulo;
+                article.appendChild(h3);
+
+                var dir = document.createElement("p");
+                dir.innerText = director;
+                article.appendChild(dir);
+
+                article.setAttribute("data-sinopsis", sinopsis);
+                article.addEventListener("click", mostrarSinopsis);
+                cont.appendChild(article);
+            };         
+        }
+
+        function mostrarSinopsis() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", comprobarPeticionSinopsis);
+            var fichero = this.dataset.sinopsis;
+            peticion.open("GET", "sinopsis/" + fichero, true);
+            peticion.send();
+        }
+
+        function comprobarPeticionSinopsis() {
+            if(this.readyState == 4 && this.status == 200) {
+                peliculasText = this.responseText;
+                sinopsis.innerText = peliculasText;
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div class="cont pelis"></div>
+        <div class="sinopsis"></div>
+    </div>   
+</body>
+</html>

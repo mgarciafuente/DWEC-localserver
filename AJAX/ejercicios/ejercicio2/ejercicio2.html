@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css">
+    <title>Ejercicio 2</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var peticion;
+        var table;
+
+        function init() {
+            cargarPeliculas();
+            table = document.getElementsByTagName('table')[0];
+        }
+
+        function cargarPeliculas() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", comprobarPeticionPeliculas);
+            peticion.open("GET", "index.php", true);
+            peticion.send();
+        }
+
+        function comprobarPeticionPeliculas() {
+            if(this.readyState == 4 && this.status == 200) {
+                peliculasXML = this.responseXML;
+                insertarPeliculas(peliculasXML);
+            }
+        }
+
+        function insertarPeliculas(peliculasResponse) {
+            var peliculas = peliculasResponse.getElementsByTagName('Pelicula'); 
+
+            for(var i=0; i<peliculas.length; i++) {
+
+                var tr = document.createElement("tr");
+
+                var titulo = peliculas[i].getElementsByTagName('Titulo')[0].firstChild.nodeValue;
+                var td1 = document.createElement("td");
+                td1.innerText = titulo;
+                tr.appendChild(td1);
+
+                var director = peliculas[i].getElementsByTagName('Director')[0].firstChild.nodeValue;
+                var td2 = document.createElement("td");
+                td2.innerText = director;
+                tr.appendChild(td2);
+
+                table.appendChild(tr);
+            };         
+        }
+
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div class="cont">
+            <table>
+                <tr>
+                    <th colspan="2">Películas</th>
+                </tr>
+                <tr>
+                    <th>Título</th><th>Director</th>
+                </tr>
+            </table>
+        </div>
+    </div>   
+</body>
+</html>

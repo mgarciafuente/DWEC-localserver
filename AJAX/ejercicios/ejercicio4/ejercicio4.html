@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css">
+    <title>Ejercicio 4</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var button;
+        var select1;
+        var select2;
+        var peticion;
+        var cont;
+        var peliculas
+        var peliculasXML;
+        var sinopsis;
+
+        function init() {
+            button = document.getElementsByClassName('button')[0];
+            button.addEventListener("click", cargarSelect1)
+            cont = document.getElementsByClassName('cont')[0];
+            sinopsis = document.getElementsByClassName('sinopsis')[0];
+        }
+
+        function cargarSelect1() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", mostrarSelect1);
+            peticion.open("GET", "index.php", true);
+            peticion.send();
+        }
+
+        function mostrarSelect1() {           
+            if(this.readyState == 4 && this.status == 200) {
+                peliculasXML = this.responseXML;
+                select1 = document.createElement("select");
+                var option0 = document.createElement("option");
+                option0.innerText = "Directores";
+                option0.setAttribute("hidden", "");
+                option0.setAttribute("selected", "");
+                cont.removeChild(button);
+                select1.appendChild(option0);
+
+                select2 = document.createElement("select");
+                var option0 = document.createElement("option");
+                option0.innerText = "Películas";
+                option0.value = "";
+                option0.setAttribute("hidden", "");
+                option0.setAttribute("selected", "");
+                select2.appendChild(option0);
+                
+                peliculas = peliculasXML.getElementsByTagName('Pelicula');
+                for(var i=0; i<peliculas.length; i++) {
+                    var exists = false;
+                    var director = peliculas[i].getElementsByTagName("Director")[0].firstChild.nodeValue;
+                    var currentOptions = select1.getElementsByTagName("option");
+                    
+                    for(var j=0; j<currentOptions.length; j++) {
+                        if(currentOptions[j].firstChild.nodeValue == director) {
+                            exists = true;
+                        }
+                    }
+
+                    if (!exists) {
+                        var dirOption = document.createElement("option");
+                        dirOption.innerText = director;
+                        dirOption.value = director;
+                        select1.appendChild(dirOption);
+                        select1.addEventListener("change", cargarSelect2)
+                    }   
+                }
+                cont.appendChild(select1);
+                cont.appendChild(select2);
+            }
+        }
+
+        function cargarSelect2() {
+            select2.innerHTML = "";
+            sinopsis.innerText = "";
+            var option0 = document.createElement("option");
+            option0.innerText = "Películas";
+            option0.setAttribute("hidden", "");
+            option0.setAttribute("selected", "");
+            select2.appendChild(option0);
+            for(var i=0; i<peliculas.length; i++) {             
+                var titulo = peliculas[i].getElementsByTagName("Titulo")[0].firstChild.nodeValue;
+                var pelOption = document.createElement("option");
+                var director = peliculas[i].getElementsByTagName("Director")[0].firstChild.nodeValue;
+                var sinopsisTxt = peliculas[i].getElementsByTagName("sinopsis")[0].firstChild.nodeValue;
+                if(director == select1.value) {
+                    pelOption.innerText = titulo;
+                    pelOption.value = sinopsisTxt;
+                    select2.appendChild(pelOption);
+                }   
+            }
+            select2.addEventListener("change", mostrarSinopsis)
+        }
+
+        function mostrarSinopsis() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", comprobarPeticionSinopsis);
+            var fichero = this.value;
+            peticion.open("GET", "sinopsis/" + fichero, true);
+            peticion.send();
+        }
+
+        function comprobarPeticionSinopsis() {
+            if(this.readyState == 4 && this.status == 200) {
+                peliculasText = this.responseText;
+                sinopsis.innerText = peliculasText;
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div class="cont pelis">
+            <button class="button">Ver opciones</button>
+        </div>
+        <p class="cont sinopsis"></p>
+    </div>   
+</body>
+</html>

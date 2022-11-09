@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
-    <title>Ejercicio 4</title>
+    <title>Ejercicio 4 JSON</title>
     <script type="text/javascript">
 
         window.onload = init;
@@ -28,13 +28,13 @@
         function cargarSelect1() {
             peticion = new XMLHttpRequest();
             peticion.addEventListener("readystatechange", mostrarSelect1);
-            peticion.open("GET", "index.php", true);
+            peticion.open("GET", "peliculas.json", true);
             peticion.send();
         }
 
         function mostrarSelect1() {           
             if(this.readyState == 4 && this.status == 200) {
-                peliculasXML = this.responseXML;
+                peliculasJSON = JSON.parse(this.responseText);
                 select1 = document.createElement("select");
                 var option0 = document.createElement("option");
                 option0.innerText = "Directores";
@@ -51,10 +51,9 @@
                 option0.setAttribute("selected", "");
                 select2.appendChild(option0);
                 
-                peliculas = peliculasXML.getElementsByTagName('Pelicula');
-                for(var i=0; i<peliculas.length; i++) {
+                for(var i=0; i<peliculasJSON.Pelicula.length; i++) {
                     var exists = false;
-                    var director = peliculas[i].getElementsByTagName("Director")[0].firstChild.nodeValue;
+                    var director = peliculasJSON.Pelicula[i].Director;
                     var currentOptions = select1.getElementsByTagName("option");
                     
                     for(var j=0; j<currentOptions.length; j++) {
@@ -84,11 +83,11 @@
             option0.setAttribute("hidden", "");
             option0.setAttribute("selected", "");
             select2.appendChild(option0);
-            for(var i=0; i<peliculas.length; i++) {             
-                var titulo = peliculas[i].getElementsByTagName("Titulo")[0].firstChild.nodeValue;
+            for(var i=0; i<peliculasJSON.Pelicula.length; i++) {             
+                var titulo = peliculasJSON.Pelicula[i].Titulo;
                 var pelOption = document.createElement("option");
-                var director = peliculas[i].getElementsByTagName("Director")[0].firstChild.nodeValue;
-                var sinopsisTxt = peliculas[i].getElementsByTagName("sinopsis")[0].firstChild.nodeValue;
+                var director = peliculasJSON.Pelicula[i].Director;
+                var sinopsisTxt = peliculasJSON.Pelicula[i].sinopsis;
                 if(director == select1.value) {
                     pelOption.innerText = titulo;
                     pelOption.value = sinopsisTxt;

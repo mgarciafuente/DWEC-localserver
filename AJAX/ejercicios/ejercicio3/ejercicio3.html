@@ -69,7 +69,7 @@
             peticion = new XMLHttpRequest();
             peticion.addEventListener("readystatechange", comprobarPeticionSinopsis);
             var fichero = this.dataset.sinopsis;
-            peticion.open("GET", "sinopsis/" + fichero, true);
+            peticion.open("GET", "sinopsis.php?fichero=" + fichero, true);
             peticion.send();
         }
 

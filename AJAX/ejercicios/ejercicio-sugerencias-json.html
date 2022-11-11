@@ -34,14 +34,21 @@
         }
 
         function mostrarSugerencias() {
-            sugerenciasDiv.innerHTML = ""
+            sugerenciasDiv.innerHTML = "";
             for(var i=0; i<sugerencias.Sugerencia.length; i++) {
-                if(input.value != "" && sugerencias.Sugerencia[i].nombre.toLowerCase().includes(input.value)) {
+                if(input.value != "" && sugerencias.Sugerencia[i].nombre.toLowerCase().includes(input.value.toLowerCase())) {
                     var sugerencia = document.createElement("p");
+                    sugerencia.style.cursor = "pointer";
                     sugerencia.innerText = sugerencias.Sugerencia[i].nombre;
+                    sugerencia.addEventListener("click", ponSugerencia)
                     sugerenciasDiv.appendChild(sugerencia);
                 }        
             }
+        }
+
+        function ponSugerencia() {
+            input.value = this.innerText;
+            sugerenciasDiv.innerHTML = "";
         }
 
     </script>

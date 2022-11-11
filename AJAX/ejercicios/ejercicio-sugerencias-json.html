@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Ejercicio 4 JSON</title>
+    <script type="text/javascript">
+
+        window.onload = init;
+        var input;
+        var sugerencias;
+        var sugerenciasDiv;
+
+        function init() {
+            input = document.getElementsByTagName('input')[0];
+            input.addEventListener("input", cargarSelect)
+            sugerenciasDiv = document.getElementById("sugerencias");
+        }
+
+        function cargarSelect() {
+            peticion = new XMLHttpRequest();
+            peticion.addEventListener("readystatechange", mostrarSelect);
+            peticion.open("GET", "sugerencias.json", true);
+            peticion.send();
+        }
+
+        function mostrarSelect() {           
+            if(this.readyState == 4 && this.status == 200) {
+                sugerencias = JSON.parse(this.responseText);
+                mostrarSugerencias()
+            }
+        }
+
+        function mostrarSugerencias() {
+            sugerenciasDiv.innerHTML = ""
+            for(var i=0; i<sugerencias.Sugerencia.length; i++) {
+                if(input.value != "" && sugerencias.Sugerencia[i].nombre.toLowerCase().includes(input.value)) {
+                    var sugerencia = document.createElement("p");
+                    sugerencia.innerText = sugerencias.Sugerencia[i].nombre;
+                    sugerenciasDiv.appendChild(sugerencia);
+                }        
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div class="cont">
+            <input type="text" name="nombre">
+            <div id="sugerencias"></div>
+        </div>
+    </div>   
+</body>
+</html>
